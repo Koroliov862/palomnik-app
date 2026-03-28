@@ -62,6 +62,59 @@ class ReligiousPlace(models.Model):
 
     def __str__(self):
         return self.name
+    
+class PlaceAddress(models.Model):
+    religious_place = models.OneToOneField(
+        ReligiousPlace, 
+        on_delete=models.CASCADE, 
+        related_name='address'
+    )
+    address_line = models.CharField(max_length=300, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    postal_code = models.CharField(max_length=20, blank=True)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+
+    def get_distance_to(self, lat, lon):
+        from math import radians, sin, cos, sqrt, atan2
+        R = 6371
+        lat1, lon1 = radians(self.latitude), radians(self.longitude)
+        lat2, lon2 = radians(lat), radians(lon)
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+        a = sin(dlat/2)**2 + cos(lat1)*cos(lat2)*sin(dlon/2)**2
+        c = 2*atan2(sqrt(a), sqrt(1-a))
+        return R * c
+
+
+class PlaceContact(models.Model):
+    religious_place = models.OneToOneField(
+        ReligiousPlace, 
+        on_delete=models.CASCADE, 
+        related_name='contact'
+    )
+    phone = models.CharField(max_length=50, blank=True)
+    website = models.URLField(blank=True)
+
+
+class PlaceAccessibility(models.Model):
+    religious_place = models.OneToOneField(
+        ReligiousPlace, 
+        on_delete=models.CASCADE, 
+        related_name='accessibility'
+    )
+    has_wheelchair_access = models.BooleanField(default=False)
+    has_parking = models.BooleanField(default=False)
+
+
+class PlaceSource(models.Model):
+    religious_place = models.OneToOneField(
+        ReligiousPlace, 
+        on_delete=models.CASCADE, 
+        related_name='source_info'
+    )
+    source = models.CharField(max_length=50, default='manual')
+    external_id = models.CharField(max_length=100, blank=True)
 
 class OpeningHours(models.Model):
     religious_place = models.ForeignKey(ReligiousPlace, on_delete=models.CASCADE, related_name='opening_hours')
