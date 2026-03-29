@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from .models import Religion, Denomination, ReligiousPlace, PlaceAddress, PlaceContact, OpeningHours
 
 class ReligiousAPITest(APITestCase):
-    def setUP(self):
+    def setUp(self):
         self.religion = Religion.objects.create(name='christianity', display_name = 'Христианство')
         self.denomination = Denomination.objects.create(
             name='orthodoxy', 
@@ -64,6 +64,8 @@ class ReligiousPlaceModelTest(TestCase):
             close_time=time(19, 0),
             is_closed=False
         )
+        result = place.get_is_open_now()
+        self.assertIsInstance(result, bool)
         # Подменяем текущее время в тесте сложнее, но можно сделать через mock
         # Упрощённо: проверяем логику через прямой вызов с известным временем
         # Для полного теста лучше использовать freezegun или mock
