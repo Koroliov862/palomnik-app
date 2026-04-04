@@ -58,6 +58,11 @@ class PlaceAddress(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['latitude', 'longitude']),
+        ]
+
     def get_distance_to(self, lat, lon):
         from math import radians, sin, cos, sqrt, atan2
         R = 6371
