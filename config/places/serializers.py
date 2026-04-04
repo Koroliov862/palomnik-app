@@ -52,7 +52,6 @@ class ReligiousPlaceSerializer(serializers.ModelSerializer):
         ]
 
     def get_distance(self, obj):
-        # если передали параметры ?lat=...&lon=...
         request = self.context.get('request')
         if request and 'lat' in request.query_params and 'lon' in request.query_params:
             try:
