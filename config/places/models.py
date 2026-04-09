@@ -1,47 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-
-
-#Переместить модели Religion и Denomination в одноименные приложения religions и denominations
-
-#religions/models.py
-# from django.db import models
-
-# class Religion(models.Model):
-#     name = models.CharField(max_length=50, unique=True)
-#     display_name = models.CharField(max_length=100)
-
-#     def __str__(self):
-#         return self.display_name
-
-
-#denominations/models.py
-# from django.db import models
-# from religions.models import Religion
-
-# class Denomination(models.Model):
-#     name = models.CharField(max_length=50, unique=True)
-#     display_name = models.CharField(max_length=100)
-#     religion = models.ForeignKey(Religion, on_delete=models.CASCADE, related_name='denominations')
-
-#     def __str__(self):
-#         return self.display_name
-    
-class Religion(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    display_name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.display_name
-
-class Denomination(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    display_name = models.CharField(max_length=100)
-    religion = models.ForeignKey(Religion, on_delete=models.CASCADE, related_name='denominations')
-
-    def __str__(self):
-        return self.display_name
+from religions.models import Religion
+from denominations.models import Denomination
 
 class ReligiousPlace(models.Model):
     name = models.CharField(max_length=200)

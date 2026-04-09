@@ -1,6 +1,8 @@
 from django.contrib import admin
+from religions.models import Religion
+from denominations.models import Denomination
 from .models import (
-    Religion, Denomination, ReligiousPlace,
+    ReligiousPlace,
     OpeningHours, PlacePhoto, UserReview,
     PlaceAddress, PlaceContact, PlaceAccessibility, PlaceSource
 )

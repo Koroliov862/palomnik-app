@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'places',
+    'religions',
+    'denominations',
 ]
 
 MIDDLEWARE = [
@@ -74,16 +76,23 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'palomnik_db',
-        'USER': 'palomnik_user',
-        'PASSWORD': '123456',  # тот пароль, который ты задал
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'palomnik_db',
+#         'USER': 'palomnik_user',
+#         'PASSWORD': '123456',  # тот пароль, который ты задал
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 #TEST = {
 #    'NAME': 'palomnik_db',  # используйте существующую БД
