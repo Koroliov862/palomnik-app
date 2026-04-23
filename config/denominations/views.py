@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from rest_framework.viewsets import ReadOnlyModelViewSet
+from .models import Denomination
+from .serializers import DenominationSerializer
 
-# Create your views here.
+class DenominationViewSet(ReadOnlyModelViewSet):
+    queryset = Denomination.objects.all()
+    serializer_class = DenominationSerializer

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'places',
     'religions',
     'denominations',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -142,3 +143,8 @@ if 'test' in sys.argv:
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': ':memory:',
     }
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    # ... остальные настройки (пагинация и т.д.)
+}

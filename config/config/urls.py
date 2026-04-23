@@ -18,8 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from places.views import ReligiousPlaceViewSet
+from rest_framework.routers import DefaultRouter
+from religions.views import ReligionViewSet
+from denominations.views import DenominationViewSet
+from places.views import ReligiousPlaceViewSet
 
 router = DefaultRouter()
+router.register(r'religions', ReligionViewSet)
+router.register(r'denominations', DenominationViewSet)
 router.register(r'religious-places', ReligiousPlaceViewSet, basename='religiousplace')
 
 urlpatterns = [

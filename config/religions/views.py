@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from rest_framework.viewsets import ReadOnlyModelViewSet
+from .models import Religion
+from .serializers import ReligionSerializer
 
-# Create your views here.
+class ReligionViewSet(ReadOnlyModelViewSet):
+    queryset = Religion.objects.all()
+    serializer_class = ReligionSerializer
