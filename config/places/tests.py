@@ -5,7 +5,7 @@ from datetime import time, date
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.contrib.auth.models import User
-from .models import Religion, Denomination, ReligiousPlace, PlaceAddress, PlaceContact, OpeningHours
+from .models import Religion, Denomination, ReligiousPlace, PlaceAddress, PlaceContact, OpeningHours, PlaceAccessibility, PlaceSource, PlacePhoto, UserReview
 
 class ReligiousAPITest(APITestCase):
     def setUp(self):
@@ -85,3 +85,60 @@ class ReligiousPlaceModelTest(TestCase):
         )
         # Ожидаем, что get_is_open_now вернёт False
         self.assertFalse(place.get_is_open_now())
+
+    def test_place_accessibility_creation(self):
+        place = ReligiousPlace.objects.create(name='Храм с пандусом')
+        accessibility = PlaceAccessibility.objects.create(
+           religious_place=place,
+           has_wheelchair_access=True,
+           has_parking=False
+        )
+        self.assertEqual(accessibility.has_wheelchair_access, True)
+        self.assertEqual(accessibility.has_parking, False)
+        self.assertEqual(accessibility.religious_place, place)
+
+    def test_place_source_creation(self):
+        place = ReligiousPlace.objects.create(name='Храм из OSM')
+        source = PlaceSource.objects.create(
+           religious_place=place,
+           source='osm',
+           external_id='osm_12345'
+        )
+        self.assertEqual(source.source, 'osm')
+        self.assertEqual(source.external_id, 'osm_12345')
+
+    def test_place_photo_creation(self):
+        place = ReligiousPlace.objects.create(name='Храм с фото')
+        photo = PlacePhoto.objects.create(
+           religious_place=place,
+           image_url='https://example.com/photo.jpg',
+           description='Купола',
+           is_main=True
+        )
+        self.assertEqual(photo.image_url, 'https://example.com/photo.jpg')
+        self.assertTrue(photo.is_main)
+        self.assertIsNotNone(photo.uploaded_at)  # auto_now_add
+
+    def test_user_review_creation(self):
+        user = User.objects.create_user(username='testuser', password='12345')
+        place = ReligiousPlace.objects.create(name='Храм с отзывами')
+        review = UserReview.objects.create(
+           religious_place=place,
+           user=user,
+           rating=5,
+           comment='Замечательное место'
+        )
+        self.assertEqual(review.rating, 5)
+        self.assertEqual(review.comment, 'Замечательное место')
+        self.assertEqual(review.user.username, 'testuser')
+
+    def test_place_address_distance_calculation(self):
+        place = ReligiousPlace.objects.create(name='Храм для расстояния')
+        address = PlaceAddress.objects.create(
+           religious_place=place,
+           latitude=55.7558,  # Москва, Красная площадь
+           longitude=37.6176
+        )
+        # Расстояние до Останкинской башни (55.8256, 37.6111) примерно 7.8 км
+        dist = address.get_distance_to(55.8256, 37.6111)
+        self.assertAlmostEqual(dist, 7.8, delta=0.5)
