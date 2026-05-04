@@ -33,7 +33,7 @@ class ReligiousPlace(models.Model):
     def __str__(self):
         return self.name
     
-class PlaceAddress(models.Model):
+class PlaceAddress(models.Model): #оставить
     religious_place = models.OneToOneField(
         ReligiousPlace, 
         on_delete=models.CASCADE, 
@@ -62,7 +62,7 @@ class PlaceAddress(models.Model):
         return R * c
 
 
-class PlaceContact(models.Model):
+class PlaceContact(models.Model): #в отдельное приложение
     religious_place = models.OneToOneField(
         ReligiousPlace, 
         on_delete=models.CASCADE, 
@@ -72,7 +72,7 @@ class PlaceContact(models.Model):
     website = models.URLField(blank=True)
 
 
-class PlaceAccessibility(models.Model):
+class PlaceAccessibility(models.Model): #?
     religious_place = models.OneToOneField(
         ReligiousPlace, 
         on_delete=models.CASCADE, 
@@ -82,7 +82,7 @@ class PlaceAccessibility(models.Model):
     has_parking = models.BooleanField(default=False)
 
 
-class PlaceSource(models.Model):
+class PlaceSource(models.Model): #в отдельное приложение
     religious_place = models.OneToOneField(
         ReligiousPlace, 
         on_delete=models.CASCADE, 
@@ -91,7 +91,7 @@ class PlaceSource(models.Model):
     source = models.CharField(max_length=50, default='manual')
     external_id = models.CharField(max_length=100, blank=True)
 
-class OpeningHours(models.Model):
+class OpeningHours(models.Model): #в отдельное приложение
     religious_place = models.ForeignKey(ReligiousPlace, on_delete=models.CASCADE, related_name='opening_hours')
     day_of_week = models.IntegerField(choices=[(0,'Пн'),(1,'Вт'),(2,'Ср'),(3,'Чт'),(4,'Пт'),(5,'Сб'),(6,'Вс')])
     open_time = models.TimeField()
@@ -100,14 +100,14 @@ class OpeningHours(models.Model):
     valid_from = models.DateField(default=timezone.now)
     valid_to = models.DateField(null=True, blank=True)
 
-class PlacePhoto(models.Model):
+class PlacePhoto(models.Model): #?
     religious_place = models.ForeignKey(ReligiousPlace, on_delete=models.CASCADE, related_name='photos')
     image_url = models.URLField()
     description = models.CharField(max_length=200, blank=True)
     is_main = models.BooleanField(default=False)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
-class UserReview(models.Model):
+class UserReview(models.Model): #в отдельное приложение
     religious_place = models.ForeignKey(ReligiousPlace, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     rating = models.PositiveSmallIntegerField()
