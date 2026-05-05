@@ -1,11 +1,13 @@
 from django.contrib import admin
 from religions.models import Religion
 from denominations.models import Denomination
-from .models import (
-    ReligiousPlace,
-    OpeningHours, PlacePhoto, UserReview,
-    PlaceAddress, PlaceContact, PlaceAccessibility, PlaceSource
-)
+from .models import ReligiousPlace, PlaceAddress
+from contacts.models import PlaceContact
+from accessibility.models import PlaceAccessibility
+from sources.models import PlaceSource
+from hours.models import OpeningHours
+from photos.models import PlacePhoto
+from reviews.models import UserReview
 
 class PlaceAddressInline(admin.StackedInline):
     model = PlaceAddress

@@ -42,6 +42,12 @@ INSTALLED_APPS = [
     'religions',
     'denominations',
     'django_filters',
+    'contacts',
+    'accessibility',
+    'sources',
+    'hours',
+    'photos',
+    'reviews',
 ]
 
 MIDDLEWARE = [

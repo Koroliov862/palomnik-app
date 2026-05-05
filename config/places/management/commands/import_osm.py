@@ -1,6 +1,7 @@
 import overpy
 from django.core.management.base import BaseCommand
-from places.models import ReligiousPlace, PlaceAddress, PlaceSource, Religion, Denomination
+from places.models import ReligiousPlace, PlaceAddress, Religion, Denomination
+from sources.models import PlaceSource
 
 class Command(BaseCommand):
     help = 'Import places of worship from OpenStreetMap'

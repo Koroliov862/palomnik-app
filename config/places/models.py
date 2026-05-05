@@ -62,54 +62,54 @@ class PlaceAddress(models.Model): #оставить
         return R * c
 
 
-class PlaceContact(models.Model): #в отдельное приложение
-    religious_place = models.OneToOneField(
-        ReligiousPlace, 
-        on_delete=models.CASCADE, 
-        related_name='contact'
-    )
-    phone = models.CharField(max_length=50, blank=True)
-    website = models.URLField(blank=True)
+# class PlaceContact(models.Model): #в отдельное приложение
+#     religious_place = models.OneToOneField(
+#         ReligiousPlace, 
+#         on_delete=models.CASCADE, 
+#         related_name='contact'
+#     )
+#     phone = models.CharField(max_length=50, blank=True)
+#     website = models.URLField(blank=True)
 
 
-class PlaceAccessibility(models.Model): #?
-    religious_place = models.OneToOneField(
-        ReligiousPlace, 
-        on_delete=models.CASCADE, 
-        related_name='accessibility'
-    )
-    has_wheelchair_access = models.BooleanField(default=False)
-    has_parking = models.BooleanField(default=False)
+# class PlaceAccessibility(models.Model): #?
+#     religious_place = models.OneToOneField(
+#         ReligiousPlace, 
+#         on_delete=models.CASCADE, 
+#         related_name='accessibility'
+#     )
+#     has_wheelchair_access = models.BooleanField(default=False)
+#     has_parking = models.BooleanField(default=False)
 
 
-class PlaceSource(models.Model): #в отдельное приложение
-    religious_place = models.OneToOneField(
-        ReligiousPlace, 
-        on_delete=models.CASCADE, 
-        related_name='source_info'
-    )
-    source = models.CharField(max_length=50, default='manual')
-    external_id = models.CharField(max_length=100, blank=True)
+# class PlaceSource(models.Model): #в отдельное приложение
+#     religious_place = models.OneToOneField(
+#         ReligiousPlace, 
+#         on_delete=models.CASCADE, 
+#         related_name='source_info'
+#     )
+#     source = models.CharField(max_length=50, default='manual')
+#     external_id = models.CharField(max_length=100, blank=True)
 
-class OpeningHours(models.Model): #в отдельное приложение
-    religious_place = models.ForeignKey(ReligiousPlace, on_delete=models.CASCADE, related_name='opening_hours')
-    day_of_week = models.IntegerField(choices=[(0,'Пн'),(1,'Вт'),(2,'Ср'),(3,'Чт'),(4,'Пт'),(5,'Сб'),(6,'Вс')])
-    open_time = models.TimeField()
-    close_time = models.TimeField()
-    is_closed = models.BooleanField(default=False)
-    valid_from = models.DateField(default=timezone.now)
-    valid_to = models.DateField(null=True, blank=True)
+# class OpeningHours(models.Model): #в отдельное приложение
+#     religious_place = models.ForeignKey(ReligiousPlace, on_delete=models.CASCADE, related_name='opening_hours')
+#     day_of_week = models.IntegerField(choices=[(0,'Пн'),(1,'Вт'),(2,'Ср'),(3,'Чт'),(4,'Пт'),(5,'Сб'),(6,'Вс')])
+#     open_time = models.TimeField()
+#     close_time = models.TimeField()
+#     is_closed = models.BooleanField(default=False)
+#     valid_from = models.DateField(default=timezone.now)
+#     valid_to = models.DateField(null=True, blank=True)
 
-class PlacePhoto(models.Model): #?
-    religious_place = models.ForeignKey(ReligiousPlace, on_delete=models.CASCADE, related_name='photos')
-    image_url = models.URLField()
-    description = models.CharField(max_length=200, blank=True)
-    is_main = models.BooleanField(default=False)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+# class PlacePhoto(models.Model): #?
+#     religious_place = models.ForeignKey(ReligiousPlace, on_delete=models.CASCADE, related_name='photos')
+#     image_url = models.URLField()
+#     description = models.CharField(max_length=200, blank=True)
+#     is_main = models.BooleanField(default=False)
+#     uploaded_at = models.DateTimeField(auto_now_add=True)
 
-class UserReview(models.Model): #в отдельное приложение
-    religious_place = models.ForeignKey(ReligiousPlace, on_delete=models.CASCADE, related_name='reviews')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
-    rating = models.PositiveSmallIntegerField()
-    comment = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+# class UserReview(models.Model): #в отдельное приложение
+#     religious_place = models.ForeignKey(ReligiousPlace, on_delete=models.CASCADE, related_name='reviews')
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
+#     rating = models.PositiveSmallIntegerField()
+#     comment = models.TextField(blank=True)
+#     created_at = models.DateTimeField(auto_now_add=True)

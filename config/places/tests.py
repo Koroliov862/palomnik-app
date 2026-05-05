@@ -5,7 +5,14 @@ from datetime import time, date
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.contrib.auth.models import User
-from .models import Religion, Denomination, ReligiousPlace, PlaceAddress, PlaceContact, OpeningHours, PlaceAccessibility, PlaceSource, PlacePhoto, UserReview
+from .models import Religion, Denomination, ReligiousPlace, PlaceAddress
+from contacts.models import PlaceContact
+from accessibility.models import PlaceAccessibility
+from sources.models import PlaceSource
+from hours.models import OpeningHours
+from photos.models import PlacePhoto
+from reviews.models import UserReview
+
 
 class ReligiousAPITest(APITestCase):
     def setUp(self):

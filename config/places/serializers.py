@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import ReligiousPlace, PlaceAddress, PlaceContact, PlaceAccessibility, PlaceSource, OpeningHours, PlacePhoto
+from .models import ReligiousPlace, PlaceAddress
+from contacts.models import PlaceContact
+from accessibility.models import PlaceAccessibility
+from sources.models import PlaceSource
+from hours.models import OpeningHours
+from photos.models import PlacePhoto
 
 class PlaceAddressSerializer(serializers.ModelSerializer):
     class Meta:
