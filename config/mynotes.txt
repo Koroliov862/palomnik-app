@@ -1,0 +1,85 @@
+В каждом приложении создать отдельные папки api(views.py, urls.py, serializers.py)
+tests(tests.py) (перенести файлы в эти папки)
+
+создать в каждом приложении файл services
+Смысл: Вся алгоритмическая логика работа с нексколькими моделями расчеты  валидцаия требущая к бд
+
+views.py: валидация входящих данных вызов методда сервиса сериализация результатов (передача данных)
+
+
+
++=======================ТЕОРИЯ===========================+
+# отличие методов класса
+# обычный (первый аргумент self)
+# классовый (первый аргумент cls)
+# статический (нет аргумента)
+
+class Demo:
+    class_var = 0
+    def instant_metod(self):
+        self.class_var = 1 #меняет состояние экземпляра класса(создает атрибут)
+
+    @classmethod
+    def class_metod(self):
+        cls.class_var = 2 #он меняет перемнную класса
+
+    @staticmethod
+    def statick_metod():
+        #не меняет доступа не к self, не к cls
+        return "Букшин снова проспал"
+
+#В серверной логике контекта Djnago 
+"-Метод не хранит состояние ему не нужен self
+-Он принимает входные параметры и возвращает реузультат не изменяя сам сервис
+- вызывается без создания экземпляра"
+
+#Методы
+"обычный метод (экземплярный) - получает self ссылку на конкретный объект
+он может менять состояние только это экземпляр (его атрибуты)
+другие экземпляры того же класса не изменяется если намеренно не меняет
+атрибут класса через self.__class__"
+
+"классовый метод (@classmethod) получает cls - ссылку на сам класс
+он может менять атрибуты класса и тогда увидеят изменения все экземпляры класса"
+
+"статический метод - не получает не self не cls не может менять не состояние экземпляра
+ни состояние класса"
+
++========================================================+
+
+
+
+Код services.py:
+from typing import List, Set
+from django.db.models import Prefetch
+from product.models import Product, Category
+from .models import Dish
+
+class DishSekectionService:
+      # Сервис для подбора блюд по выборной категории и набору продуктов
+      "метод классы который не получает автоматически сслыку
+      н экземпляр класса (self) и не получает сслыку на сам класс
+      формально ведет себя как обычная фукнция но логическти принадлежит
+      самому классу и вызввается через класс или его экземпляр"
+
+      @staticmethod
+
+      def get_possible_dishes(Category_id: int, product_ids:List[int] -> List[Dish]):
+      "возвращаем список блюд заданой категории
+      для которых все ингридиенты содержатся в пределах product_id
+      Получаем блюда нужной категории с предварительной загрузкой ингридиентов"
+      dishes = Dish.objects.filter(category_id = category_id).prefetch_related(
+        Prefetch('products', queryset = Product.objects.only('id'))
+      )
+      product_set = set(product_ids)
+      result = []
+       for dish in dishes:
+          dish_product_set = set(dish.products.value_list('id', flat=True))
+          if dish_product_set.issubset(product_set):
+            result.append(dish)
+       return result
+
+      @staticmethod
+      #для которых выбора возвращаем все категории с их продуктами
+      def get_possible_dishes():
+          return Category.objects.prefetch_relate('products').all()
