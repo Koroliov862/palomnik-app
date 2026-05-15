@@ -1,47 +1,50 @@
-from django.shortcuts import render
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from django.db.models import Q
-from django_filters.rest_framework import DjangoFilterBackend
-from django_filters import rest_framework as filters
-
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from .models import ReligiousPlace
 from .serializers import ReligiousPlaceSerializer
+from .services import ReligiousPlaceService
 
-# Создаём FilterSet для расширенной фильтрации
-class ReligiousPlaceFilter(filters.FilterSet):
-    # Фильтры для связанных моделей
-    wheelchair = filters.BooleanFilter(field_name='accessibility__has_wheelchair_access')
-    parking = filters.BooleanFilter(field_name='accessibility__has_parking')
-    city = filters.CharFilter(field_name='address__city', lookup_expr='iexact')  # точное совпадение без учёта регистра
-    open_247 = filters.BooleanFilter(field_name='is_open_247')
-    denomination = filters.NumberFilter(field_name='denomination_id')
-    religion = filters.NumberFilter(field_name='denomination__religion_id')
-
-    class Meta:
-        model = ReligiousPlace
-        fields = ['wheelchair', 'parking', 'city', 'open_247', 'denomination', 'religion']
-
-class ReligiousPlaceViewSet(ModelViewSet):
-    queryset = ReligiousPlace.objects.select_related('address', 'contact', 'accessibility', 'source_info')
+class ReligiousPlaceViewSet(ReadOnlyModelViewSet):
     serializer_class = ReligiousPlaceSerializer
-    filter_backends = [DjangoFilterBackend]  # включаем фильтрацию
-    filterset_class = ReligiousPlaceFilter   # используем наш FilterSet
 
     def get_queryset(self):
-        # Сначала применяем стандартную фильтрацию (через filter_backends) к базовому queryset
-        queryset = super().get_queryset()
-
-        # Геофильтрация (остаётся без изменений)
         lat = self.request.query_params.get('lat')
         lon = self.request.query_params.get('lon')
-        radius = self.request.query_params.get('radius', 10)  # км (пока не используется)
+        radius = self.request.query_params.get('radius', 10)
 
+        # Если есть координаты, используем сервис с фильтрацией по расстоянию
         if lat and lon:
-            # грубая фильтрация по квадрату
-            queryset = queryset.filter(
-                address__latitude__range=(float(lat)-0.5, float(lat)+0.5),
-                address__longitude__range=(float(lon)-0.5, float(lon)+0.5)
-            )
-        return queryset
+            try:
+                lat = float(lat)
+                lon = float(lon)
+                radius = float(radius)
+                return ReligiousPlaceService.get_places_with_distance(lat, lon, radius)
+            except (TypeError, ValueError):
+                pass
+
+        # Иначе – просто фильтруем по другим параметрам
+        denomination_ids = self.request.query_params.getlist('denomination')
+        religion_ids = self.request.query_params.getlist('religion')
+        has_wheelchair = self.request.query_params.get('wheelchair')
+        has_parking = self.request.query_params.get('parking')
+        is_open_247 = self.request.query_params.get('open_247')
+        city = self.request.query_params.get('city')
+        search = self.request.query_params.get('search')
+
+        if has_wheelchair is not None:
+            has_wheelchair = has_wheelchair.lower() == 'true'
+        if has_parking is not None:
+            has_parking = has_parking.lower() == 'true'
+        if is_open_247 is not None:
+            is_open_247 = is_open_247.lower() == 'true'
+
+        return ReligiousPlaceService.get_filtered_places(
+            lat=None,
+            lon=None,
+            denomination_ids=denomination_ids or None,
+            religion_ids=religion_ids or None,
+            has_wheelchair=has_wheelchair,
+            has_parking=has_parking,
+            is_open_247=is_open_247,
+            city=city,
+            search=search,
+        )
