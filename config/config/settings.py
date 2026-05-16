@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'hours',
     'photos',
     'reviews',
+    'djoser',
 ]
 
 MIDDLEWARE = [
