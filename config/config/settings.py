@@ -153,5 +153,14 @@ if 'test' in sys.argv:
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
     # ... остальные настройки (пагинация и т.д.)
+}
+
+DJOSER = {
+    'USER_ID_FIELD': 'username',   # поле, используемое для идентификации
+    'LOGIN_FIELD': 'email',        # можно 'username' или 'email'
+    'SERIALIZERS': {},
 }
