@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'places',
     'religions',
     'denominations',
@@ -161,6 +162,6 @@ REST_FRAMEWORK = {
 
 DJOSER = {
     'USER_ID_FIELD': 'username',   # поле, используемое для идентификации
-    'LOGIN_FIELD': 'email',        # можно 'username' или 'email'
+    'LOGIN_FIELD': 'username',        # можно 'username' или 'email'
     'SERIALIZERS': {},
 }

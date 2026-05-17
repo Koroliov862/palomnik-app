@@ -22,13 +22,17 @@ from rest_framework.routers import DefaultRouter
 from religions.views import ReligionViewSet
 from denominations.views import DenominationViewSet
 from places.views import ReligiousPlaceViewSet
+from reviews.views import UserReviewViewSet
 
 router = DefaultRouter()
 router.register(r'religions', ReligionViewSet)
 router.register(r'denominations', DenominationViewSet)
 router.register(r'religious-places', ReligiousPlaceViewSet, basename='religiousplace')
+router.register(r'reviews', UserReviewViewSet, basename='review')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('api/', include(router.urls)),
+    path('api/', include(router.urls)),
+    path('api/auth/', include('djoser.urls')),
+    path('api/auth/', include('djoser.urls.authtoken')),
 ]
