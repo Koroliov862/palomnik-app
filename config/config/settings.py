@@ -157,7 +157,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    # ... остальные настройки (пагинация и т.д.)
 }
 
 DJOSER = {
