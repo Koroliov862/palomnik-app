@@ -46,6 +46,8 @@ class ReligiousPlaceSerializer(serializers.ModelSerializer):
     opening_hours = OpeningHoursSerializer(many=True, read_only=True)
     photos = PlacePhotoSerializer(many=True, read_only=True)
     distance = serializers.SerializerMethodField()
+    average_rating = serializers.FloatField(read_only=True)
+    ratings_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = ReligiousPlace
@@ -53,7 +55,8 @@ class ReligiousPlaceSerializer(serializers.ModelSerializer):
             'id', 'name', 'description', 'denomination',
             'is_open_247', 'opening_hours_summary', 'created_at', 'updated_at',
             'address', 'contact', 'accessibility', 'source_info',
-            'opening_hours', 'photos', 'distance'
+            'opening_hours', 'photos', 'distance', 'average_rating',
+            'ratings_count',
         ]
 
     def get_distance(self, obj):

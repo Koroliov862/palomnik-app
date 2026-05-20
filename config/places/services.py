@@ -8,6 +8,7 @@ from hours.models import OpeningHours
 from reviews.models import UserReview
 from denominations.models import Denomination
 from religions.models import Religion
+from django.db.models import Avg, Count
 
 class ReligiousPlaceService:
     @staticmethod
@@ -98,3 +99,12 @@ class ReligiousPlaceService:
         # Сортировка по расстоянию
         result.sort(key=lambda p: p.distance)
         return result
+    
+    @staticmethod
+    def update_place_rating(place_id: int):
+        """Пересчитывает средний рейтинг и количество оценок для храма."""
+        place = ReligiousPlace.objects.get(id=place_id)
+        stats = place.reviews.aggregate(avg=Avg('rating'), cnt=Count('id'))
+        place.average_rating = stats['avg'] or 0.0
+        place.ratings_count = stats['cnt'] or 0
+        place.save()

@@ -12,6 +12,8 @@ class ReligiousPlace(models.Model):
     opening_hours_summary = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    average_rating = models.FloatField(default=0.0, null=False, blank=False)
+    ratings_count = models.PositiveIntegerField(default=0)  # опционально
 
     def get_distance_to(self, lat, lon):
         if hasattr(self, 'address') and self.address:
