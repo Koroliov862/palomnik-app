@@ -23,12 +23,14 @@ from religions.views import ReligionViewSet
 from denominations.views import DenominationViewSet
 from places.views import ReligiousPlaceViewSet
 from reviews.views import UserReviewViewSet
+from favorites.views import FavoriteViewSet
 
 router = DefaultRouter()
 router.register(r'religions', ReligionViewSet)
 router.register(r'denominations', DenominationViewSet)
 router.register(r'religious-places', ReligiousPlaceViewSet, basename='religiousplace')
 router.register(r'reviews', UserReviewViewSet, basename='review')
+router.register(r'favorites', FavoriteViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
