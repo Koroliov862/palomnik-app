@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'photos',
     'reviews',
     'djoser',
+    'favorites',
 ]
 
 MIDDLEWARE = [

@@ -7,3 +7,14 @@ class UserReview(models.Model): #в отдельное приложение
     rating = models.PositiveSmallIntegerField()
     comment = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        from places.services import ReligiousPlaceService
+        ReligiousPlaceService.update_place_rating(self.religious_place_id)
+
+    def delete(self, *args, **kwargs):
+        place_id = self.religious_place_id
+        super().delete(*args, **kwargs)
+        from places.services import ReligiousPlaceService
+        ReligiousPlaceService.update_place_rating(place_id)

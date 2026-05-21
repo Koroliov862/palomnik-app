@@ -30,7 +30,7 @@ router.register(r'religions', ReligionViewSet)
 router.register(r'denominations', DenominationViewSet)
 router.register(r'religious-places', ReligiousPlaceViewSet, basename='religiousplace')
 router.register(r'reviews', UserReviewViewSet, basename='review')
-router.register(r'favorites', FavoriteViewSet)
+router.register(r'favorites', FavoriteViewSet, basename='favorite')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
