@@ -34,9 +34,14 @@ class OpeningHoursSerializer(serializers.ModelSerializer):
         fields = ['day_of_week', 'day_display', 'open_time', 'close_time', 'is_closed']
 
 class PlacePhotoSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
     class Meta:
         model = PlacePhoto
         fields = ['image_url', 'description', 'is_main', 'uploaded_at']
+        
+    def get_image_url(self, obj):
+        # Возвращаем относительный путь (например, /media/loretan_Ra9Zzmp.jpg)
+        return obj.image_url.url
 
 class ReligiousPlaceSerializer(serializers.ModelSerializer):
     address = PlaceAddressSerializer(read_only = True)
