@@ -19,7 +19,8 @@ import os
 
 MEDIA_URL = '/media/'
 #MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_ROOT = BASE_DIR / 'media'
+#MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = r'C:\Users\user\Documents\GitHub\palomnik-app\media'
 
 
 # Quick-start development settings - unsuitable for production
@@ -174,3 +175,5 @@ DJOSER = {
     'LOGIN_FIELD': 'username',        # можно 'username' или 'email'
     'SERIALIZERS': {},
 }
+
+#print(f"MEDIA_ROOT = {MEDIA_ROOT}")

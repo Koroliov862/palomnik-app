@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
-import api from '../services/api';
+import api, { BASE_URL } from '../services/api';
 
 interface ReligiousPlace {
   id: number;
@@ -19,8 +19,8 @@ const PlacesList: React.FC<PlacesListProps> = ({ places }) => {
     // Безопасно получаем URL первого фото (если есть)
     const photoUrl = item.photos?.[0]?.image_url;
     const imageSource = photoUrl
-      ? { uri: `${api.defaults.baseURL}${photoUrl}` }
-      : { uri: 'https://placehold.co/80x80' }; // заглушка
+  ? { uri: `${BASE_URL}${photoUrl}` }
+  : { uri: 'https://placehold.co/80x80' }; // заглушка
 
     return (
       <View style={styles.card}>
