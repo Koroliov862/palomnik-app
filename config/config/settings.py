@@ -9,18 +9,19 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 import os
 
-MEDIA_URL = '/media/'
 #MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_ROOT = r'C:\Users\user\Documents\GitHub\palomnik-app\media'
+#MEDIA_ROOT = r'C:\Users\user\Documents\GitHub\palomnik-app\media'
+#MEDIA_ROOT = r'C:\Users\Student\Documents\GitHub\palomnik-app\media'
 
 
 # Quick-start development settings - unsuitable for production
@@ -175,5 +176,3 @@ DJOSER = {
     'LOGIN_FIELD': 'username',        # можно 'username' или 'email'
     'SERIALIZERS': {},
 }
-
-#print(f"MEDIA_ROOT = {MEDIA_ROOT}")
