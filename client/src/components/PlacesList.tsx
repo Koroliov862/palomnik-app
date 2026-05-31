@@ -1,13 +1,18 @@
 import React from 'react';
-import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
-import api, { BASE_URL } from '../services/api';
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { BASE_URL } from '../services/api';
 
 interface ReligiousPlace {
   id: number;
   name: string;
   distance?: number;
   average_rating?: number;
-  photos?: { image_url: string }[];   // добавляем поле photos
+  is_open_247?: boolean;
+  accessibility?: {
+    has_wheelchair_access: boolean;
+    has_parking: boolean;
+  };
+  photos?: { image_url: string }[];
 }
 
 interface PlacesListProps {
@@ -16,24 +21,49 @@ interface PlacesListProps {
 
 const PlacesList: React.FC<PlacesListProps> = ({ places }) => {
   const renderItem = ({ item }: { item: ReligiousPlace }) => {
-    // Безопасно получаем URL первого фото (если есть)
     const photoUrl = item.photos?.[0]?.image_url;
     const imageSource = photoUrl
-  ? { uri: `${BASE_URL}${photoUrl}` }
-  : { uri: 'https://placehold.co/80x80' }; // заглушка
+      ? { uri: `${BASE_URL}${photoUrl}` }
+      : { uri: 'https://placehold.co/80x80?text=Фото' };
+
+    const hasWheelchair = item.accessibility?.has_wheelchair_access || false;
+    const hasParking = item.accessibility?.has_parking || false;
+    const isOpen247 = item.is_open_247 || false;
 
     return (
       <View style={styles.card}>
         <Image source={imageSource} style={styles.image} />
         <View style={styles.info}>
           <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.distance}>
-            {item.distance ? `${item.distance.toFixed(1)} км` : '—'}
-          </Text>
-          {item.average_rating ? (
-            <Text style={styles.rating}>⭐ {item.average_rating.toFixed(1)}</Text>
-          ) : null}
+          <View style={styles.metaRow}>
+            <Text style={styles.distance}>
+              📍 {item.distance ? `${item.distance.toFixed(1)} км` : '—'}
+            </Text>
+            {item.average_rating ? (
+              <Text style={styles.rating}>⭐ {item.average_rating.toFixed(1)}</Text>
+            ) : null}
+          </View>
+          <View style={styles.badges}>
+            {hasWheelchair && (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>♿ Пандус</Text>
+              </View>
+            )}
+            {hasParking && (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>🅿️ Парковка</Text>
+              </View>
+            )}
+            {isOpen247 && (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>🕒 Круглосуточно</Text>
+              </View>
+            )}
+          </View>
         </View>
+        <TouchableOpacity style={styles.favoriteBtn}>
+          <Text style={styles.favoriteIcon}>🤍</Text>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -49,10 +79,14 @@ const PlacesList: React.FC<PlacesListProps> = ({ places }) => {
 };
 
 const styles = StyleSheet.create({
-  list: { padding: 16 },
+  list: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    backgroundColor: '#F8F6F2',
+  },
   card: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
     borderRadius: 20,
     marginBottom: 16,
     padding: 12,
@@ -60,12 +94,61 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
+    alignItems: 'center',
   },
-  image: { width: 80, height: 80, borderRadius: 16, marginRight: 12, backgroundColor: '#EFEBE4' },
-  info: { flex: 1, justifyContent: 'center' },
-  name: { fontSize: 18, fontWeight: '600', marginBottom: 4 },
-  distance: { fontSize: 13, color: '#6B6A66', marginBottom: 4 },
-  rating: { fontSize: 13, color: '#C7A86B' },
+  image: {
+    width: 80,
+    height: 80,
+    borderRadius: 16,
+    marginRight: 12,
+    backgroundColor: '#EFEBE4',
+  },
+  info: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: '600',
+    fontFamily: 'Georgia', // или 'PlayfairDisplay-Regular', если шрифт подключён
+    marginBottom: 4,
+    color: '#3A2C1F',
+  },
+  metaRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 6,
+  },
+  distance: {
+    fontSize: 13,
+    color: '#6B6A66',
+  },
+  rating: {
+    fontSize: 13,
+    color: '#C7A86B',
+  },
+  badges: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  badge: {
+    backgroundColor: '#EFEBE4',
+    borderRadius: 30,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  badgeText: {
+    fontSize: 11,
+    color: '#C17B5E',
+  },
+  favoriteBtn: {
+    alignSelf: 'flex-start',
+    padding: 8,
+  },
+  favoriteIcon: {
+    fontSize: 22,
+    color: '#C17B5E',
+  },
 });
 
 export default PlacesList;
