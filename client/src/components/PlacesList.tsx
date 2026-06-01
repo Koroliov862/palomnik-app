@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import { BASE_URL } from '../services/api';
 
 interface ReligiousPlace {
@@ -20,6 +21,12 @@ interface PlacesListProps {
 }
 
 const PlacesList: React.FC<PlacesListProps> = ({ places }) => {
+  const router = useRouter();
+
+  const onCardPress = (id: number) => {
+    router.push(`/place/${id}` as any); // если TypeScript ругается, используйте as any или путь с параметрами
+  };
+
   const renderItem = ({ item }: { item: ReligiousPlace }) => {
     const photoUrl = item.photos?.[0]?.image_url;
     const imageSource = photoUrl
@@ -31,40 +38,42 @@ const PlacesList: React.FC<PlacesListProps> = ({ places }) => {
     const isOpen247 = item.is_open_247 || false;
 
     return (
-      <View style={styles.card}>
-        <Image source={imageSource} style={styles.image} />
-        <View style={styles.info}>
-          <Text style={styles.name}>{item.name}</Text>
-          <View style={styles.metaRow}>
-            <Text style={styles.distance}>
-              📍 {item.distance ? `${item.distance.toFixed(1)} км` : '—'}
-            </Text>
-            {item.average_rating ? (
-              <Text style={styles.rating}>⭐ {item.average_rating.toFixed(1)}</Text>
-            ) : null}
+      <TouchableOpacity onPress={() => onCardPress(item.id)} activeOpacity={0.7}>
+        <View style={styles.card}>
+          <Image source={imageSource} style={styles.image} />
+          <View style={styles.info}>
+            <Text style={styles.name}>{item.name}</Text>
+            <View style={styles.metaRow}>
+              <Text style={styles.distance}>
+                📍 {item.distance ? `${item.distance.toFixed(1)} км` : '—'}
+              </Text>
+              {item.average_rating ? (
+                <Text style={styles.rating}>⭐ {item.average_rating.toFixed(1)}</Text>
+              ) : null}
+            </View>
+            <View style={styles.badges}>
+              {hasWheelchair && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>♿ Пандус</Text>
+                </View>
+              )}
+              {hasParking && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>🅿️ Парковка</Text>
+                </View>
+              )}
+              {isOpen247 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>🕒 Круглосуточно</Text>
+                </View>
+              )}
+            </View>
           </View>
-          <View style={styles.badges}>
-            {hasWheelchair && (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>♿ Пандус</Text>
-              </View>
-            )}
-            {hasParking && (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>🅿️ Парковка</Text>
-              </View>
-            )}
-            {isOpen247 && (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>🕒 Круглосуточно</Text>
-              </View>
-            )}
-          </View>
+          <TouchableOpacity style={styles.favoriteBtn}>
+            <Text style={styles.favoriteIcon}>🤍</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.favoriteBtn}>
-          <Text style={styles.favoriteIcon}>🤍</Text>
-        </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -109,7 +118,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontWeight: '600',
-    fontFamily: 'Georgia', // или 'PlayfairDisplay-Regular', если шрифт подключён
+    fontFamily: 'Georgia',
     marginBottom: 4,
     color: '#3A2C1F',
   },

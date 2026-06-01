@@ -2,6 +2,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from .models import ReligiousPlace
 from .serializers import ReligiousPlaceSerializer
 from .services import ReligiousPlaceService
+from django.shortcuts import get_object_or_404
 
 class ReligiousPlaceViewSet(ReadOnlyModelViewSet):
     serializer_class = ReligiousPlaceSerializer
@@ -65,3 +66,11 @@ class ReligiousPlaceViewSet(ReadOnlyModelViewSet):
             city=city,
             search=search,
         )
+    
+    def get_object(self):
+        # Для детального запроса получаем объект напрямую по pk
+        pk = self.kwargs.get('pk')
+        if pk is not None:
+            queryset = ReligiousPlace.objects.select_related('address', 'denomination')
+            return get_object_or_404(queryset, pk=pk)
+        return super().get_object()
