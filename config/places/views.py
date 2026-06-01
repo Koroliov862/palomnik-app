@@ -6,6 +6,23 @@ from .services import ReligiousPlaceService
 class ReligiousPlaceViewSet(ReadOnlyModelViewSet):
     serializer_class = ReligiousPlaceSerializer
 
+    # def get_serializer_context(self):
+    #     context = super().get_serializer_context()
+    #     context['request'] = self.request
+    #     print("Сериализатор context содержит request:", 'request' in context)
+    #     return context
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        # Добавляем координаты, если они есть
+        lat = self.request.query_params.get('lat')
+        lon = self.request.query_params.get('lon')
+        if lat and lon:
+           context['user_lat'] = float(lat)
+           context['user_lon'] = float(lon)
+        return context
+
     def get_queryset(self):
         lat = self.request.query_params.get('lat')
         lon = self.request.query_params.get('lon')

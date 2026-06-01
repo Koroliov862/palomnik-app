@@ -64,13 +64,71 @@ class ReligiousPlaceSerializer(serializers.ModelSerializer):
             'ratings_count',
         ]
 
+    # def get_distance(self, obj):
+    #     request = self.context.get('request')
+    #     if request and 'lat' in request.query_params and 'lon' in request.query_params:
+    #         try:
+    #             lat = float(request.query_params['lat'])
+    #             lon = float(request.query_params['lon'])
+    #             dist = obj.get_distance_to(lat, lon)
+    #             print(f"Вычислено расстояние для {obj.name}: {dist}")   # <-- добавьте
+    #             return dist
+    #         #except (TypeError, ValueError, AttributeError):
+    #         except Exception as e:
+    #             print("Ошибка:", e)
+    #             #pass
+    #     return None
+
     def get_distance(self, obj):
-        request = self.context.get('request')
-        if request and 'lat' in request.query_params and 'lon' in request.query_params:
-            try:
-                lat = float(request.query_params['lat'])
-                lon = float(request.query_params['lon'])
-                return obj.get_distance_to(lat, lon)
-            except (TypeError, ValueError, AttributeError):
-                pass
-        return None
+        print(f"=== get_distance вызван для {obj.name} ===")
+        return 5.0  # временно всегда возвращаем 5
+
+    # def get_distance(self, obj):
+    #     print(f"=== get_distance вызван для {obj.name} ===")
+    #     request = self.context.get('request')
+    #     if request:
+    #        print("Все параметры запроса:", request.query_params)
+    #     if request and 'lat' in request.query_params and 'lon' in request.query_params:
+    #       try:
+    #         lat = float(request.query_params['lat'])
+    #         lon = float(request.query_params['lon'])
+    #         print(f"lat={lat}, lon={lon}")
+    #         # Проверяем, есть ли address
+    #         if not hasattr(obj, 'address') or obj.address is None:
+    #             print(f"Нет адреса у {obj.name}")
+    #             return None
+    #         dist = obj.get_distance_to(lat, lon)
+    #         print(f"Расстояние до {obj.name}: {dist}")
+    #         return dist
+    #       except Exception as e:
+    #         print(f"Ошибка для {obj.name}: {e}")
+    #     return None
+
+    # def get_distance(self, obj):
+    #     lat = self.context.get('user_lat')
+    #     lon = self.context.get('user_lon')
+    #     if lat is not None and lon is not None:
+    #       try:
+    #         if not hasattr(obj, 'address') or obj.address is None:
+    #             return None
+    #         return obj.get_distance_to(lat, lon)
+    #       except Exception as e:
+    #         print(f"Ошибка: {e}")
+    #     return None
+
+    # def get_distance(self, obj):
+    #     # Если расстояние уже вычислено (например, в сервисе), возвращаем его
+    #     if hasattr(obj, 'distance'):
+    #        return obj.distance
+    #     # Иначе пытаемся вычислить по параметрам запроса
+    #     request = self.context.get('request')
+    #     if request and 'lat' in request.query_params and 'lon' in request.query_params:
+    #       try:
+    #         lat = float(request.query_params['lat'])
+    #         lon = float(request.query_params['lon'])
+    #         if not hasattr(obj, 'address') or obj.address is None:
+    #             return None
+    #         return obj.get_distance_to(lat, lon)
+    #       except Exception:
+    #         return None
+    #     return None
