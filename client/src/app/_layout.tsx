@@ -8,6 +8,7 @@ export default function Layout() {
         name="index"
         options={{
           title: 'Список',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => <Ionicons name="list" size={size} color={color} />,
         }}
       />
@@ -15,6 +16,7 @@ export default function Layout() {
         name="map"
         options={{
           title: 'Карта',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => <Ionicons name="map" size={size} color={color} />,
         }}
       />
@@ -22,6 +24,7 @@ export default function Layout() {
         name="favorites"
         options={{
           title: 'Избранное',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => <Ionicons name="star-outline" size={size} color={color} />,
         }}
       />
