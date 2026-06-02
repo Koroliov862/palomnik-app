@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import FavoriteButton from './FavoriteButton';
 import { BASE_URL } from '../services/api';
 
 interface ReligiousPlace {
@@ -69,9 +70,10 @@ const PlacesList: React.FC<PlacesListProps> = ({ places }) => {
               )}
             </View>
           </View>
-          <TouchableOpacity style={styles.favoriteBtn}>
+          {/* <TouchableOpacity style={styles.favoriteBtn}>
             <Text style={styles.favoriteIcon}>🤍</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <FavoriteButton placeId={item.id} size={22} />
         </View>
       </TouchableOpacity>
     );

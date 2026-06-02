@@ -1,8 +1,10 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { FavoritesProvider } from '../context/FavoritesContext';
 
 export default function Layout() {
   return (
+    <FavoritesProvider>
     <Tabs>
       <Tabs.Screen
         name="index"
@@ -28,6 +30,8 @@ export default function Layout() {
           tabBarIcon: ({ color, size }) => <Ionicons name="star-outline" size={size} color={color} />,
         }}
       />
+      <Tabs.Screen name="login" options={{ title: 'Вход', href: null }} />
     </Tabs>
+    </FavoritesProvider>
   );
 }

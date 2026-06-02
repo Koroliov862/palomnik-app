@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import api from '../services/api';
 import PlacesList from '../components/PlacesList';
 import FilterModal from '../components/FilterModal';
+import { useRouter } from 'expo-router';
 
 // Тип для фильтров
 interface Filters {
@@ -25,6 +26,7 @@ export default function Index() {
     isOpen247: false,
   });
   const [denominations, setDenominations] = useState<any[]>([]);
+  const router = useRouter();
 
   // Загрузка конфессий
   useEffect(() => {
@@ -78,9 +80,12 @@ export default function Index() {
           <Text style={styles.greetingTitle}>Паломник</Text>
           <Text style={styles.greetingSubtitle}>Религиозные сооружения рядом</Text>
         </View>
-        <View style={styles.profileIcon}>
+        {/* <View style={styles.profileIcon}>
           <Ionicons name="person-outline" size={24} color="white" />
-        </View>
+        </View> */}
+        <TouchableOpacity onPress={() => router.push('/login')}>
+          <Ionicons name="person-outline" size={24} color="white" />
+        </TouchableOpacity>
       </View>
 
       {/* Строка фильтров (как в образце) */}

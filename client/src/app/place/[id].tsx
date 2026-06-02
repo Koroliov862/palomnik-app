@@ -4,6 +4,7 @@ import { View, Text, Image, ScrollView, ActivityIndicator, Linking, TouchableOpa
 import api from '../../services/api';
 import { BASE_URL } from '../../services/api';
 import { StyleSheet } from 'react-native';
+import FavoriteButton from '../../components/FavoriteButton';
 
 interface PlaceDetail {
   id: number;
@@ -91,7 +92,7 @@ export default function PlaceDetailScreen() {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#F8F6F2' }}>
       <Stack.Screen options={{ title: place.name }} />
-      
+
       {/* Фото */}
       {mainPhoto && (
         <Image
@@ -102,9 +103,13 @@ export default function PlaceDetailScreen() {
       )}
 
       <View style={{ padding: 20 }}>
-        <Text style={{ fontSize: 28, fontFamily: 'Georgia', marginBottom: 8, color: '#3A2C1F' }}>
-          {place.name}
-        </Text>
+        {/* Название и кнопка избранного */}
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+          <Text style={{ fontSize: 28, fontFamily: 'Georgia', color: '#3A2C1F', flex: 1 }}>
+            {place.name}
+          </Text>
+          <FavoriteButton placeId={place.id} size={28} />
+        </View>
         
         {/* Рейтинг */}
         {place.average_rating ? (
