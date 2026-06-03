@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { View, Text, TextInput, Button, Alert, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFavorites } from '../context/FavoritesContext';
 import api from '../services/api';
@@ -37,12 +37,49 @@ export default function LoginScreen() {
     }
   };
 
+  const handleCancel = () => {
+    router.replace('/'); // перенаправление на главный экран без авторизации
+  };
+
   return (
-    <View style={{ padding: 20 }}>
-      <Text>Логин</Text>
-      <TextInput placeholder="Username" value={username} onChangeText={setUsername} />
-      <TextInput placeholder="Password" secureTextEntry value={password} onChangeText={setPassword} />
-      <Button title="Войти" onPress={handleLogin} />
+    <View style={styles.container}>
+      <Text style={styles.title}>Вход</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+        autoCapitalize="none"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+      <View style={styles.buttonRow}>
+        <View style={styles.button}>
+          <Button title="Войти" onPress={handleLogin} />
+        </View>
+        <View style={styles.button}>
+          <Button title="Отмена" onPress={handleCancel} color="#6B6A66" />
+        </View>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { padding: 20, flex: 1, justifyContent: 'center' },
+  title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 16,
+  },
+  buttonRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 12 },
+  button: { flex: 1 },
+});
