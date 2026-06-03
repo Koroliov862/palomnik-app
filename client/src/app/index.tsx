@@ -5,6 +5,7 @@ import api from '../services/api';
 import PlacesList from '../components/PlacesList';
 import FilterModal from '../components/FilterModal';
 import { useRouter } from 'expo-router';
+import { useFavorites } from '../context/FavoritesContext';
 
 // Тип для фильтров
 interface Filters {
@@ -26,7 +27,13 @@ export default function Index() {
     isOpen247: false,
   });
   const [denominations, setDenominations] = useState<any[]>([]);
+  const { isAuthenticated, username, logout } = useFavorites();
   const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.replace('/login');
+  };
 
   // Загрузка конфессий
   useEffect(() => {
@@ -80,12 +87,20 @@ export default function Index() {
           <Text style={styles.greetingTitle}>Паломник</Text>
           <Text style={styles.greetingSubtitle}>Религиозные сооружения рядом</Text>
         </View>
-        {/* <View style={styles.profileIcon}>
-          <Ionicons name="person-outline" size={24} color="white" />
-        </View> */}
-        <TouchableOpacity onPress={() => router.push('/login')}>
-          <Ionicons name="person-outline" size={24} color="white" />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', gap: 16, alignItems: 'center' }}>
+          {isAuthenticated ? (
+            <>
+              <Text style={{ color: '#3A2C1F', fontSize: 14 }}>{username}</Text>
+              <TouchableOpacity onPress={handleLogout}>
+                <Ionicons name="log-out-outline" size={24} color="white" />
+              </TouchableOpacity>
+            </>
+          ) : (
+            <TouchableOpacity onPress={() => router.push('/login')}>
+              <Ionicons name="person-outline" size={24} color="white" />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
 
       {/* Строка фильтров (как в образце) */}
@@ -136,21 +151,13 @@ const styles = StyleSheet.create({
   greetingTitle: {
     fontSize: 22,
     fontWeight: '600',
-    fontFamily: 'Georgia', // можно заменить на 'PlayfairDisplay-Regular'
+    fontFamily: 'Georgia',
     color: '#3A2C1F',
   },
   greetingSubtitle: {
     fontSize: 13,
     color: '#6B6A66',
     marginTop: 4,
-  },
-  profileIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#DCAF96',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   filterRow: {
     flexDirection: 'row',

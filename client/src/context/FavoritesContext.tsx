@@ -1,3 +1,4 @@
+// context/FavoritesContext.tsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../services/api';
@@ -8,6 +9,10 @@ interface FavoritesContextType {
   addFavorite: (placeId: number) => Promise<void>;
   removeFavorite: (placeId: number) => Promise<void>;
   isFavorite: (placeId: number) => boolean;
+  isAuthenticated: boolean;
+  username: string | null;
+  login: (token: string, username: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
@@ -15,6 +20,8 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(undefin
 export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [favorites, setFavorites] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState<string | null>(null);
 
   const loadFavorites = async () => {
     try {
@@ -36,8 +43,17 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   };
 
+  // Загрузка состояния авторизации при старте
   useEffect(() => {
-    loadFavorites();
+    const loadAuth = async () => {
+      const token = await AsyncStorage.getItem('authToken');
+      const storedUsername = await AsyncStorage.getItem('username');
+      if (token && storedUsername) {
+        setIsAuthenticated(true);
+        setUsername(storedUsername);
+      }
+    };
+    loadAuth().then(() => loadFavorites());
   }, []);
 
   const addFavorite = async (placeId: number) => {
@@ -57,7 +73,6 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     try {
       const token = await AsyncStorage.getItem('authToken');
       if (!token) throw new Error('Не авторизован');
-      // Получим список избранного, чтобы найти id записи
       const response = await api.get('/favorites/', {
         headers: { Authorization: `Token ${token}` }
       });
@@ -75,8 +90,37 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const isFavorite = (placeId: number) => favorites.includes(placeId);
 
+  const login = async (token: string, username: string) => {
+    await AsyncStorage.setItem('authToken', token);
+    await AsyncStorage.setItem('username', username);
+    setIsAuthenticated(true);
+    setUsername(username);
+    // После логина загружаем избранное
+    await loadFavorites();
+  };
+
+  const logout = async () => {
+    await AsyncStorage.removeItem('authToken');
+    await AsyncStorage.removeItem('username');
+    setIsAuthenticated(false);
+    setUsername(null);
+    setFavorites([]);
+  };
+
   return (
-    <FavoritesContext.Provider value={{ favorites, loading, addFavorite, removeFavorite, isFavorite }}>
+    <FavoritesContext.Provider
+      value={{
+        favorites,
+        loading,
+        addFavorite,
+        removeFavorite,
+        isFavorite,
+        isAuthenticated,
+        username,
+        login,
+        logout,
+      }}
+    >
       {children}
     </FavoritesContext.Provider>
   );
