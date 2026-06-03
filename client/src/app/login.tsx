@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import { useFavorites } from '../context/FavoritesContext';
 import api from '../services/api';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { login } = useFavorites();
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -16,9 +17,9 @@ export default function LoginScreen() {
       console.log('Полный ответ:', response);
       const token = response.data.auth_token;
       if (token) {
-        await AsyncStorage.setItem('authToken', token);
+        await login(token, username);
         Alert.alert('Успех', 'Вход выполнен');
-        router.replace('/');  // теперь router определён
+        router.replace('/');
       } else {
         Alert.alert('Ошибка', 'Токен не получен');
       }
