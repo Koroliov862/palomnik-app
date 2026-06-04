@@ -96,7 +96,7 @@ export default function Index() {
               </TouchableOpacity>
             </>
           ) : (
-            <TouchableOpacity onPress={() => router.push('/login')}>
+            <TouchableOpacity onPress={() => router.push('/login' as any)}>
               <Ionicons name="person-outline" size={24} color="white" />
             </TouchableOpacity>
           )}
