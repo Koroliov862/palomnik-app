@@ -31,6 +31,7 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen name="login" options={{ title: 'Вход', href: null }} />
+      <Tabs.Screen name="place/[id]" options={{ href: null }} />
     </Tabs>
     </FavoritesProvider>
   );
