@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'baseline',
     paddingHorizontal: 20,
-    paddingTop: 8,
+    paddingTop: 48,
     paddingBottom: 24,
     backgroundColor: '#E8DCCC',
     borderBottomLeftRadius: 20,
