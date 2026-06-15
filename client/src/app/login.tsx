@@ -66,6 +66,12 @@ export default function LoginScreen() {
           <Button title="Отмена" onPress={handleCancel} color="#6B6A66" />
         </View>
       </View>
+      {/* Ссылка на регистрацию */}
+      <View style={styles.registerContainer}>
+        <TouchableOpacity onPress={() => router.push('/register')}>
+          <Text style={styles.registerText}>Нет аккаунта? Зарегистрироваться</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -82,4 +88,13 @@ const styles = StyleSheet.create({
   },
   buttonRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 12 },
   button: { flex: 1 },
+  registerContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  registerText: {
+    color: '#C17B5E',
+    fontSize: 14,
+    textDecorationLine: 'underline',
+  },
 });

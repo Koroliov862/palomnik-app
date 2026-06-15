@@ -1,10 +1,11 @@
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, ActivityIndicator, Linking, TouchableOpacity } from 'react-native';
+import { View, Text, Image, ScrollView, ActivityIndicator, Linking, TouchableOpacity, TextInput, Alert, Button } from 'react-native';
 import api from '../../services/api';
 import { BASE_URL } from '../../services/api';
 import { StyleSheet } from 'react-native';
 import FavoriteButton from '../../components/FavoriteButton';
+import { useFavorites } from '../../context/FavoritesContext';
 
 interface PlaceDetail {
   id: number;
@@ -34,6 +35,10 @@ export default function PlaceDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [place, setPlace] = useState<PlaceDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [newRating, setNewRating] = useState('');
+  const [newComment, setNewComment] = useState('');
+  const { isAuthenticated } = useFavorites();
 
   useEffect(() => {
     if (id) {
@@ -45,10 +50,36 @@ export default function PlaceDetailScreen() {
     try {
       const response = await api.get(`/religious-places/${id}/`);
       setPlace(response.data);
+      // загружаем отзывы
+      const numericId = Number(id);
+      const reviewsRes = await api.get(`/reviews/?religious_place=${numericId}`);
+      setReviews(reviewsRes.data);
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const submitReview = async () => {
+    if (!newRating || !newComment) {
+      Alert.alert('Ошибка', 'Заполните оценку и комментарий');
+      return;
+    }
+    try {
+      await api.post('/reviews/', {
+        religious_place: place?.id,
+        rating: parseInt(newRating),
+        comment: newComment,
+      });
+      // обновляем отзывы
+      const reviewsRes = await api.get(`/reviews/?religious_place=${id}`);
+      setReviews(reviewsRes.data);
+      setNewRating('');
+      setNewComment('');
+      Alert.alert('Успех', 'Отзыв добавлен');
+    } catch (err: any) {
+      Alert.alert('Ошибка', err.response?.data?.detail || 'Не удалось добавить отзыв');
     }
   };
 
@@ -166,6 +197,45 @@ export default function PlaceDetailScreen() {
           </View>
         )}
 
+        {/* ========== ОТЗЫВЫ ========== */}
+        <Text style={styles.sectionTitle}>Отзывы</Text>
+        {reviews.length === 0 ? (
+          <Text style={{ color: '#6B6A66', marginBottom: 16 }}>Пока нет отзывов. Будьте первым!</Text>
+        ) : (
+          reviews.map(review => (
+            <View key={review.id} style={styles.reviewItem}>
+              <Text style={styles.reviewAuthor}>{review.user}</Text>
+              <Text style={{ marginVertical: 4 }}>⭐ {review.rating}</Text>
+              <Text style={{ color: '#4B4A47' }}>{review.comment}</Text>
+            </View>
+          ))
+        )}
+
+        {isAuthenticated ? (
+          <View style={styles.reviewForm}>
+            <Text style={styles.sectionTitle}>Оставить отзыв</Text>
+            <TextInput
+              placeholder="Оценка (1-5)"
+              keyboardType="numeric"
+              value={newRating}
+              onChangeText={setNewRating}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Комментарий"
+              value={newComment}
+              onChangeText={setNewComment}
+              style={[styles.input, { height: 80 }]}
+              multiline
+            />
+            <Button title="Отправить отзыв" onPress={submitReview} />
+          </View>
+        ) : (
+          <TouchableOpacity onPress={() => Alert.alert('Вход', 'Чтобы оставить отзыв, войдите в аккаунт')}>
+            <Text style={{ color: '#C17B5E', textAlign: 'center', marginTop: 16 }}>Войдите, чтобы оставить отзыв</Text>
+          </TouchableOpacity>
+        )}
+
         {/* Кнопка маршрута */}
         <TouchableOpacity
           onPress={openMaps}
@@ -193,5 +263,37 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#C17B5E',
     overflow: 'hidden',
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginTop: 16,
+    marginBottom: 12,
+    color: '#3A2C1F',
+  },
+  reviewItem: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E0D8',
+    paddingVertical: 12,
+    marginBottom: 8,
+  },
+  reviewAuthor: {
+    fontWeight: 'bold',
+    marginBottom: 4,
+    color: '#3A2C1F',
+  },
+  reviewForm: {
+    marginTop: 16,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E0D8',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 12,
+    backgroundColor: '#fff',
   },
 });
