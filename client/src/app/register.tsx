@@ -10,13 +10,16 @@ export default function RegisterScreen() {
   const router = useRouter();
 
   const handleRegister = async () => {
+    console.log('Кнопка нажата, username:', username, 'email:', email);
     try {
-      await api.post('/auth/users/', { username, email, password });
+      console.log('Отправка запроса на /auth/users/');
+      const response = await api.post('/auth/users/', { username, email, password });
+      console.log('Ответ сервера:', response.data);
       Alert.alert('Успех', 'Регистрация прошла. Теперь войдите.');
       router.replace('/login');
     } catch (err: any) {
-      const msg = err.response?.data || 'Ошибка регистрации';
-      Alert.alert('Ошибка', JSON.stringify(msg));
+      console.error('Ошибка регистрации:', err.response?.data || err.message);
+      Alert.alert('Ошибка', err.response?.data?.detail || 'Не удалось зарегистрироваться');
     }
   };
 

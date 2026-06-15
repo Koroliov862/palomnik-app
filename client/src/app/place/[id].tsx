@@ -257,10 +257,6 @@ export default function PlaceDetailScreen() {
         >
           <Text style={{ color: 'white', fontWeight: '600' }}>Проложить маршрут</Text>
         </TouchableOpacity>
-
-        <View style={{ padding: 20 }}>
-          <Text>Тест</Text>
-        </View>
       </View>
     </ScrollView>
   );
