@@ -62,24 +62,30 @@ export default function PlaceDetailScreen() {
   };
 
   const submitReview = async () => {
-    if (!newRating || !newComment) {
-      Alert.alert('Ошибка', 'Заполните оценку и комментарий');
-      return;
-    }
-    try {
-      await api.post('/reviews/', {
-        religious_place: place?.id,
-        rating: parseInt(newRating),
-        comment: newComment,
-      });
-      // обновляем отзывы
-      const reviewsRes = await api.get(`/reviews/?religious_place=${id}`);
-      setReviews(reviewsRes.data);
-      setNewRating('');
-      setNewComment('');
-      Alert.alert('Успех', 'Отзыв добавлен');
+    console.log('Отправка отзыва для храма', place?.id);
+    console.log('Рейтинг:', newRating, 'Комментарий:', newComment);
+  
+  if (!newRating) {
+    Alert.alert('Ошибка', 'Поставьте оценку');
+    return;
+  }
+  
+  try {
+    const response = await api.post('/reviews/', {
+      religious_place: place?.id,
+      rating: parseInt(newRating),
+      comment: newComment,
+    });
+    console.log('Успех', response.data);
+    // обновляем отзывы
+    const reviewsRes = await api.get(`/reviews/?religious_place=${id}`);
+    setReviews(reviewsRes.data);
+    setNewRating('');
+    setNewComment('');
+    Alert.alert('Успех', 'Отзыв добавлен');
     } catch (err: any) {
-      Alert.alert('Ошибка', err.response?.data?.detail || 'Не удалось добавить отзыв');
+    console.error('Ошибка:', err.response?.data || err.message);
+    Alert.alert('Ошибка', err.response?.data?.detail || 'Не удалось добавить отзыв');
     }
   };
 
@@ -119,6 +125,8 @@ export default function PlaceDetailScreen() {
   }
 
   const mainPhoto = place.photos?.find(p => p.is_main) || place.photos?.[0];
+  console.log('Название храма:', place.name);
+  console.log('Отзывы:', reviews);
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#F8F6F2' }}>
@@ -249,6 +257,10 @@ export default function PlaceDetailScreen() {
         >
           <Text style={{ color: 'white', fontWeight: '600' }}>Проложить маршрут</Text>
         </TouchableOpacity>
+
+        <View style={{ padding: 20 }}>
+          <Text>Тест</Text>
+        </View>
       </View>
     </ScrollView>
   );
