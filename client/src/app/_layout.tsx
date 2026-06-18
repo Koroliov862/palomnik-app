@@ -30,9 +30,9 @@ export default function Layout() {
           tabBarIcon: ({ color, size }) => <Ionicons name="star-outline" size={size} color={color} />,
         }}
       />
-      <Tabs.Screen name="login" options={{ title: 'Вход', href: null }} />
+      <Tabs.Screen name="login" options={{ title: 'Вход', href: null, headerShown: false, }} />
       <Tabs.Screen name="place/[id]" options={{ href: null }} />
-      <Tabs.Screen name="register" options={{ href: null}} />
+      <Tabs.Screen name="register" options={{ href: null, headerShown: false,}} />
     </Tabs>
     </FavoritesProvider>
   );

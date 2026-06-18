@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Alert, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFavorites } from '../context/FavoritesContext';
 import api from '../services/api';
@@ -38,56 +38,102 @@ export default function LoginScreen() {
   };
 
   const handleCancel = () => {
-    router.replace('/'); // перенаправление на главный экран без авторизации
+    router.replace('/');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Вход</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <View style={styles.buttonRow}>
-        <View style={styles.button}>
-          <Button title="Войти" onPress={handleLogin} />
-        </View>
-        <View style={styles.button}>
-          <Button title="Отмена" onPress={handleCancel} color="#6B6A66" />
-        </View>
-      </View>
-      {/* Ссылка на регистрацию */}
-      <View style={styles.registerContainer}>
-        <TouchableOpacity onPress={() => router.push('/register')}>
-          <Text style={styles.registerText}>Нет аккаунта? Зарегистрироваться</Text>
+      <View style={styles.card}>
+        <Text style={styles.title}>Вход</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
+          placeholderTextColor="#A89F94"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+          placeholderTextColor="#A89F94"
+        />
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginButtonText}>Войти</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
+          <Text style={styles.cancelButtonText}>Отмена</Text>
+        </TouchableOpacity>
+        <View style={styles.registerContainer}>
+          <TouchableOpacity onPress={() => router.push('/register')}>
+            <Text style={styles.registerText}>Нет аккаунта? Зарегистрироваться</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20, flex: 1, justifyContent: 'center' },
-  title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 16,
+  container: {
+    flex: 1,
+    backgroundColor: '#F8F6F2',
+    justifyContent: 'center',
+    padding: 20,
   },
-  buttonRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 12 },
-  button: { flex: 1 },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  title: {
+    fontSize: 28,
+    fontFamily: 'Georgia',
+    color: '#3A2C1F',
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  input: {
+    backgroundColor: '#F8F6F2',
+    borderWidth: 1,
+    borderColor: '#E5E0D8',
+    borderRadius: 12,
+    padding: 14,
+    fontSize: 16,
+    marginBottom: 16,
+    color: '#3A2C1F',
+  },
+  loginButton: {
+    backgroundColor: '#C17B5E',
+    borderRadius: 40,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  loginButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  cancelButton: {
+    backgroundColor: '#EFEBE4',
+    borderRadius: 40,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  cancelButtonText: {
+    color: '#6B6A66',
+    fontSize: 16,
+    fontWeight: '500',
+  },
   registerContainer: {
     marginTop: 20,
     alignItems: 'center',
@@ -96,5 +142,6 @@ const styles = StyleSheet.create({
     color: '#C17B5E',
     fontSize: 14,
     textDecorationLine: 'underline',
+    fontFamily: 'Georgia',
   },
 });

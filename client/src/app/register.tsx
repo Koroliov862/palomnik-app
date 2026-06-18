@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Alert, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import api from '../services/api';
 
@@ -25,18 +25,96 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Регистрация</Text>
-      <TextInput placeholder="Имя пользователя" value={username} onChangeText={setUsername} style={styles.input} />
-      <TextInput placeholder="Email" value={email} onChangeText={setEmail} style={styles.input} keyboardType="email-address" autoCapitalize="none" />
-      <TextInput placeholder="Пароль" secureTextEntry value={password} onChangeText={setPassword} style={styles.input} />
-      <Button title="Зарегистрироваться" onPress={handleRegister} />
-      <Button title="Уже есть аккаунт? Войти" onPress={() => router.push('/login')} color="#6B6A66" />
+      <View style={styles.card}>
+        <Text style={styles.title}>Регистрация</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Имя пользователя"
+          value={username}
+          onChangeText={setUsername}
+          placeholderTextColor="#A89F94"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          placeholderTextColor="#A89F94"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Пароль"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+          placeholderTextColor="#A89F94"
+        />
+        <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
+          <Text style={styles.registerButtonText}>Зарегистрироваться</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.loginLink} onPress={() => router.push('/login')}>
+          <Text style={styles.loginLinkText}>Уже есть аккаунт? Войти</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#F8F6F2' },
-  title: { fontSize: 24, marginBottom: 20, textAlign: 'center', fontFamily: 'Georgia' },
-  input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 10, marginBottom: 16, backgroundColor: '#fff' },
+  container: {
+    flex: 1,
+    backgroundColor: '#F8F6F2',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  title: {
+    fontSize: 28,
+    fontFamily: 'Georgia',
+    color: '#3A2C1F',
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  input: {
+    backgroundColor: '#F8F6F2',
+    borderWidth: 1,
+    borderColor: '#E5E0D8',
+    borderRadius: 12,
+    padding: 14,
+    fontSize: 16,
+    marginBottom: 16,
+    color: '#3A2C1F',
+  },
+  registerButton: {
+    backgroundColor: '#C17B5E',
+    borderRadius: 40,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  registerButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  loginLink: {
+    marginTop: 16,
+    alignItems: 'center',
+  },
+  loginLinkText: {
+    color: '#C17B5E',
+    fontSize: 14,
+    textDecorationLine: 'underline',
+    fontFamily: 'Georgia',
+  },
 });
