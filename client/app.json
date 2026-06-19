@@ -4,7 +4,7 @@
     "slug": "client",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/palomnik-logo.png",
     "scheme": "client",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -12,10 +12,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#F8F6F2",
+        "foregroundImage": "./assets/images/palomnik-logo.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.palomnik.app"
